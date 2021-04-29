@@ -12,3 +12,41 @@
 // the screen should remain fully clear as long as no key is pressed.
 
 // Put your code here.
+
+(OUTERLOOP)
+    // Checking whether keyboard is active or not
+    @KBD 
+    D=M
+    @value
+    M=-1
+    @SLATE
+    D;JNE
+    @value
+    M=0
+
+    // If any key is pressed paint the entire screen black
+(SLATE)
+    @SCREEN
+    D=A
+    @addr
+    M=D     // Move i to begining of SCREEN register
+
+(INNERLOOP)
+    @value
+    D=M
+    @addr
+    A=M
+    M=D   // coloring the whole section black
+
+    @addr
+    M=M+1
+
+    D=M
+    @KBD
+    D=D-A
+    @INNERLOOP
+    D;JLT
+
+    @OUTERLOOP
+    0;JMP
+
