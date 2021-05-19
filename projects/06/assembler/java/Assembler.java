@@ -3,7 +3,6 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Scanner;
-import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -124,15 +123,14 @@ public class Assembler {
 
         }
 
+        scan.close();
+
         return labels;
     }
 
     public static String asmToHack(String codes) {
 
-        Scanner scan = new Scanner(codes);
-
         int addressDec = 0, // value of @value
-                pc = 0, // pc count
                 lineNumber = 0, // record lineNumber for exception
                 startAddress = 16, // start address for variable
                 temp = 0, // temp var
@@ -156,6 +154,8 @@ public class Assembler {
         HashMap<String, Integer> labels = findLabels(codes);
 
         HashMap<String, Integer> symbols = new HashMap<String, Integer>();
+
+        Scanner scan = new Scanner(codes);
 
         while (scan.hasNextLine()) {
 
@@ -228,8 +228,6 @@ public class Assembler {
 
                 instructions += "0" + value + "\n";
 
-                pc++;
-
             } else if (pL.matcher(line).find()) {
 
                 // if it is a L instruction just negelect it
@@ -301,6 +299,7 @@ public class Assembler {
         }
         // System.out.println(instructions);
 
+        scan.close();
         return instructions;
     }
 
@@ -334,6 +333,7 @@ public class Assembler {
 
             }
 
+            scan.close();
             // get rid of last "\n"
             preprocessed = preprocessed.trim();
 
